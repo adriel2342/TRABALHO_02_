@@ -1,0 +1,13 @@
+from python 3.10-slim 
+
+WORKDIR . 
+
+COPY trabalho_02.py .
+
+COPY requirements.txt . 
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 5000
+
+CMD ["python", "trabalho_02.py"]

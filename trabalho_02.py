@@ -182,15 +182,20 @@ class Inventario:
         "vulnerabilidades":[]
     }
 
-        
-
-
         for vuln in self.vulnerabilidades:
             dados["vulnerabilidades"].append(vuln.para_dict())
 
         for eq in self.equipamentos:
-            dados["equipamentos"].append(eq.para_dict())
-            
+            eq_dict = eq.para_dict()
+
+            vulns_aninhadas = []
+            for id_v in eq.ids_vulnerabilidades:
+                v_obj = self.buscar_vulnerabilidade(id_v)
+                if v_obj:
+                    vulns_aninhadas.append(v_obj.paradict())
+            eq_dict["vulnerabilidades_detalhadas"] = vulns_aninhadas
+            dados["equipamentos"].append(eq_dict())
+
 
         with open(self.ARQUIVOS_DADOS, "w", encoding="utf-8") as arquivo:
             json.dump(dados, arquivo, ensure_ascii= False, indent=4)
