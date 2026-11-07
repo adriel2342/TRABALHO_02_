@@ -1,1 +1,32 @@
-[]
+{
+    "equipamentos": [
+        {
+            "id_ativo": "1",
+            "nome": "PC-FINANCEIRO-01",
+            "responsavel": "adriel",
+            "ip": "192.168.100.10",
+            "ids_vulnerabilidades": [
+                "1"
+            ],
+            "tipo": "Notebook",
+            "vulnerabilidades_detalhadas": [
+                {
+                    "id_vuln": "1",
+                    "descricao": "teclado com problemas",
+                    "categoria": "hardware",
+                    "severidade": 1,
+                    "status": "em aberto"
+                }
+            ]
+        }
+    ],
+    "vulnerabilidades": [
+        {
+            "id_vuln": "1",
+            "descricao": "teclado com problemas",
+            "categoria": "hardware",
+            "severidade": 1,
+            "status": "em aberto"
+        }
+    ]
+}

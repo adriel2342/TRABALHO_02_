@@ -192,9 +192,9 @@ class Inventario:
             for id_v in eq.ids_vulnerabilidades:
                 v_obj = self.buscar_vulnerabilidade(id_v)
                 if v_obj:
-                    vulns_aninhadas.append(v_obj.paradict())
+                    vulns_aninhadas.append(v_obj.para_dict())
             eq_dict["vulnerabilidades_detalhadas"] = vulns_aninhadas
-            dados["equipamentos"].append(eq_dict())
+            dados["equipamentos"].append(eq_dict)
 
 
         with open(self.ARQUIVOS_DADOS, "w", encoding="utf-8") as arquivo:
@@ -236,7 +236,7 @@ class Menu:
            print("=== Nenhum id cadastrado ===")
            return
 
-       print("=== ID's cadastrados ===")
+       print("=== ID's cadastrados para os ativos ===")
        for eq in equipamentos:
            print(f"ID: {eq.id_ativo} | NOME: {eq.nome}")
 
@@ -247,6 +247,7 @@ class Menu:
         if not vulnerabilidades:
             print("=== Nenhum ID cadastrado ===")
             return
+        print("=== ID's cadastrados para vulnerabilidades ===")
         for vuln in vulnerabilidades:
             print(f"ID: {vuln.id_vuln}")
 
@@ -594,13 +595,9 @@ class Menu:
             print("=== Opcao invalida ===")
   
     def tela_vincular_vulnerabilidades(self):
-        print("== ID das vulnerabilidades ==")
         self.id_vuln_mostrar_vuln()
-        print("== ID dos ativos ==")
         self.id_ativo_mostrar_ativo()
-
         id_ativo = input("Digite o ID do ativo: ").strip()
-        self.id_vuln_mostrar_vuln
         id_vuln = input("Digite o ID da vulnerabilidade: ").strip()
 
         if not id_vuln or not id_ativo:
@@ -615,10 +612,6 @@ class Menu:
             print("== Vinculado! ==")
 
         else: print("== ID não encontrado ==")
-
-
-
-
 
 inventario = Inventario()
 menu = Menu(inventario)
