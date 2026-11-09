@@ -11,10 +11,10 @@ class TipoAtivo(Enum):
 
 
 class Severidades(Enum):
-    Baixa = 1
-    Media = 2
-    Alta = 3
-    Critica = 5
+    BAIXA = 2.0
+    MEDIA = 5.45
+    ALTA = 7.95
+    CRITICA = 9.5
 
 
 class Status (Enum):
@@ -39,10 +39,10 @@ class Vulnerabilidade:
         self.status = status
 
     def descrever_vuln (self):
-        return f"|esse é o id: {self.id_vuln}, \n|essa é a descricao: {self.descricao}, \n|essa é a categoria: {self.categoria},\n|essa é a severidade: {self.severidade}, \n|esse é o status: {self.status}"
+        return f"|esse é o id: {self.id_vuln}, \n|essa é a descricao: {self.descricao}, \n|essa é a categoria: {self.categoria},\n|essa é a severidade: {self.severidade.name}, \n|esse é o status: {self.status}"
     
     def para_dict (self):
-        return {"id_vuln": self.id_vuln, "descricao": self.descricao, "categoria": self.categoria.value, "severidade": self.severidade.value, "status": self.status.value}     
+        return {"id_vuln": self.id_vuln, "descricao": self.descricao, "categoria": self.categoria.value, "severidade": self.severidade.name, "status": self.status.value}     
 
 class Equipamento:
     def __init__  (self, id_ativo, nome, responsavel, ip, ids_vulnerabilidades=None ): #utilizamos o None pois seria obrigat
@@ -181,7 +181,7 @@ class Inventario:
         "equipamentos": [],
         "vulnerabilidades":[]
     }
-
+    
         for vuln in self.vulnerabilidades:
             dados["vulnerabilidades"].append(vuln.para_dict())
 
@@ -209,7 +209,7 @@ class Inventario:
        with open(self.ARQUIVOS_DADOS, "r", encoding="utf-8") as arquivo:
            dados = json.load(arquivo)
            for item in dados["vulnerabilidades"]:
-               v =Vulnerabilidade(item["id_vuln"], item["descricao"], CategoriasVuln(item ["categoria"]), Severidades(item["severidade"]), Status(item ["status"]))
+               v =Vulnerabilidade(item["id_vuln"], item["descricao"], CategoriasVuln(item ["categoria"]), Severidades[item["severidade"]], Status(item ["status"]))
                self.vulnerabilidades.append(v)
            for item in dados ["equipamentos"]:
                if item["tipo"] == "Notebook":
@@ -271,7 +271,7 @@ class Menu:
         print("-- Adicionar vulnerabilidades -- (4)")
         print("-- Buscar vulnerabilidades -- (5)")
         print("-- Remover/Editar vulnerabilidades -- (6)")
-        print("-- Vinvular vulnerabilidades -- (7)")
+        print("-- Vincular vulnerabilidades -- (7)")
         print("-- Sair -- (0) ")
 
     def opcao_selecionada(self):
@@ -431,7 +431,7 @@ class Menu:
         descricao = input("== Digite a descricao para a vulnerabilidade: ").strip().lower()
 
         for c in CategoriasVuln:
-             print(c.value)
+             print(c.name)
 
         try:
             codigo_categoria = input("Digite uma das categorias acima: ").strip().lower()
@@ -442,13 +442,13 @@ class Menu:
             return
 
         for s in Severidades:
-            print(s.name, "-", s.value)
+            print(s.name, )
 
         try:
-            codigo_severidade = int(input("Digite um dos valores acima: ").strip())
-            tipo_severidade = Severidades(codigo_severidade)
+            codigo_severidade = input("Digite uma das severidades acima: ").strip().upper()
+            tipo_severidade = Severidades[codigo_severidade]
 
-        except ValueError:
+        except KeyError:
             print("== Tipo nao identificado ==")
             return
 
@@ -527,10 +527,9 @@ class Menu:
             descricao_novo = input("Coloque uma nova descricao para a vulnerabilidade(Caso queira manter pressione enter):  ").strip().lower() or None
             print("== Essas sao as categorias disponiveis ==")
             for c in CategoriasVuln:
-                print(c.value)
-            
-                categoria_nova = input("Coloque uma nova categoria para a vulnerabilidade(Caso queira manter pressione enter): ").strip().lower() or None
-                tipo_categoria = None
+                print(c.name)
+            categoria_nova = input("Coloque uma nova categoria para a vulnerabilidade(Caso queira manter pressione enter): ").strip().lower() or None
+            tipo_categoria = None
             if categoria_nova:
                 try:
                     tipo_categoria = CategoriasVuln(categoria_nova)
@@ -539,9 +538,9 @@ class Menu:
                     return
             print("== Esses sao os tipos disponiveis ==")    
             for sev in Severidades:
-                print(sev.name, "-", sev.value)
+                print(sev.name )
 
-            severidade_nova = input("Coloque uma nova severidade(selecione um dos numeros) para a vulnerabilidade(Caso queira manter pressione enter): ").strip()
+            severidade_nova = input("Coloque uma nova severidade para a vulnerabilidade(Caso queira manter pressione enter): ").strip().upper()
             tipo_severidade = None
             if severidade_nova:
                 try: 
