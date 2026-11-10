@@ -45,11 +45,12 @@ class Vulnerabilidade:
         return {"id_vuln": self.id_vuln, "descricao": self.descricao, "categoria": self.categoria.value, "severidade": self.severidade.name, "status": self.status.value}     
 
 class Equipamento:
-    def __init__  (self, id_ativo, nome, responsavel, ip, ids_vulnerabilidades=None ): #utilizamos o None pois seria obrigat
+    def __init__  (self, id_ativo, nome, responsavel, ip, ids_vulnerabilidades=None, dependencia=None): #utilizamos o None pois seria obrigat
       self.id_ativo = id_ativo
       self.nome = nome
       self.responsavel = responsavel
       self.ip = ip
+      self.dependencia = dependencia or {}
       self.ids_vulnerabilidades = ids_vulnerabilidades or []
       self.tipo = type(self).__name__
 
@@ -57,7 +58,7 @@ class Equipamento:
         return f"|esse é o id: {self.id_ativo}, \n|esse é o nome: {self.nome}, \n|esse é o responsavel: {self.responsavel}, \n|esse é o ip: {self.ip}"
     #criar aqui o fator de exposição também
     def para_dict(self):
-        return {"id_ativo": self.id_ativo, "nome": self.nome, "responsavel": self.responsavel, "ip": self.ip, "ids_vulnerabilidades": self.ids_vulnerabilidades, "tipo": self.tipo}
+        return {"id_ativo": self.id_ativo, "nome": self.nome, "responsavel": self.responsavel, "ip": self.ip, "ids_vulnerabilidades": self.ids_vulnerabilidades, "tipo": self.tipo, "dependencia": self.dependencia}
 
 
 #Nessas classes depois colocar o fator de exposição 
@@ -176,6 +177,31 @@ class Inventario:
         return False
 
 
+    def vincular_dependencia(self, id_alvo, id_origem, peso):
+        alvo = self.buscar_equipamento(id_alvo)
+        origem = self.buscar_equipamento(id_origem)
+
+        if alvo is None or origem is None:
+            print("=== Ativo alvo ou de origem nao encontrados ===")
+            return False
+
+        if id_alvo == id_origem:
+            print("=== Um ativo nao pode depender de si mesmo ===")
+            return False
+
+        soma_atual = sum(alvo.dependencia.values())
+        peso_antigo = alvo.dependencia.get(id_origem, 0.0)
+        nova_soma = soma_atual - peso_antigo + peso
+
+        if nova_soma >= 1.0:
+            print("=== Os valores dos pesos nao podem exceder 100% ===")
+            return False
+        alvo.dependencia[id_origem] = peso
+        self.salvar()
+        return True 
+
+
+    
     def salvar (self):
         dados = {
         "equipamentos": [],
@@ -213,13 +239,13 @@ class Inventario:
                self.vulnerabilidades.append(v)
            for item in dados ["equipamentos"]:
                if item["tipo"] == "Notebook":
-                   e = Notebook(item["id_ativo"], item["nome"], item ["responsavel"], item ["ip"], item["ids_vulnerabilidades"])
+                   e = Notebook(item["id_ativo"], item["nome"], item ["responsavel"], item ["ip"], item["ids_vulnerabilidades"], item["dependencia"])
                elif item["tipo"] == "Roteador":
-                   e = Roteador(item["id_ativo"], item["nome"], item ["responsavel"], item ["ip"], item["ids_vulnerabilidades"])
+                   e = Roteador(item["id_ativo"], item["nome"], item ["responsavel"], item ["ip"], item["ids_vulnerabilidades"], item["dependencia"])
                elif item["tipo"] == "Servidor_Web":
-                   e = Servidor_Web(item["id_ativo"], item["nome"], item ["responsavel"], item ["ip"], item["ids_vulnerabilidades"])
+                   e = Servidor_Web(item["id_ativo"], item["nome"], item ["responsavel"], item ["ip"], item["ids_vulnerabilidades"], item["dependencia"])
                elif item["tipo"] == "Impressora":
-                   e = Impressora(item["id_ativo"], item["nome"], item ["responsavel"], item ["ip"], item["ids_vulnerabilidades"])
+                   e = Impressora(item["id_ativo"], item["nome"], item ["responsavel"], item ["ip"], item["ids_vulnerabilidades"],item["dependencia"])
                else:
                    continue 
                self.equipamentos.append(e)
@@ -272,6 +298,7 @@ class Menu:
         print("-- Buscar vulnerabilidades -- (5)")
         print("-- Remover/Editar vulnerabilidades -- (6)")
         print("-- Vincular vulnerabilidades -- (7)")
+        print("-- Vincular dependencia de ativos -- (8)")
         print("-- Sair -- (0) ")
 
     def opcao_selecionada(self):
@@ -292,6 +319,9 @@ class Menu:
                 self.tela_editar_remover_vulnerabilidade()
             elif opcao == "7":
                 self.tela_vincular_vulnerabilidades()
+            elif opcao == "8":
+                self.tela_vincular_dependencia()
+
             elif opcao == "0":
                 print("=== OBRIGADO PELO USO ===")
                 break
@@ -611,6 +641,45 @@ class Menu:
             print("== Vinculado! ==")
 
         else: print("== ID não encontrado ==")
+
+
+    def tela_vincular_dependencia(self):
+
+        
+
+        print("=== Vinculo de dependencias ===")
+        print("=== ID`s disponiveis -->")
+        self.id_ativo_mostrar_ativo()
+
+        id_alvo = input("escolha o ID da vulnerabilidade para ser cadastrado alguma dependencia: ").strip().lower()
+        id_origem = input("escolha o ID da vulnerabilidade para dependencia do ativo acima: ").strip().lower()
+
+        if not id_alvo or not id_origem:
+            print("=== esses campos nao podem ficar em branco ===")
+            return
+
+        ativo_alvo = self.inventario.buscar_equipamento(id_alvo)
+        ativo_origem = self.inventario.buscar_equipamento(id_origem)
+
+        if not ativo_alvo or not ativo_origem:
+            print("=== Um ativo ou ambos nao identificados ===")
+            return 
+        try:
+            peso = float(input("Adicione um peso para vulnerabilidade EX: 0.3, (O valor nao pode ser igual ou maior que 1): ") ).strip()
+
+        except ValueError:
+            print("== O valor tem que estar em decimal ex: 0.3 == ")
+            return
+            
+        self.inventario.vincular_dependencia(id_alvo, id_origem, peso)
+        print("== Dependencia cadastrada com sucesso ==")
+        
+        
+
+
+
+
+
 
 inventario = Inventario()
 menu = Menu(inventario)
