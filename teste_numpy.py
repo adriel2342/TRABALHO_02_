@@ -4,6 +4,8 @@ import numpy as np
 #vetor_0 =np.zeros(3)
 #print(vetor_0)
 
+
+
 #vetor_1 = np.ones(3)
 #print(vetor_0)
  

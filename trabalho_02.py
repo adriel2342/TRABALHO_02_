@@ -1,6 +1,7 @@
 import json
 from enum import Enum
 from pathlib import Path
+import numpy as np 
 
 
 class TipoAtivo(Enum):
@@ -61,18 +62,18 @@ class Equipamento:
         return {"id_ativo": self.id_ativo, "nome": self.nome, "responsavel": self.responsavel, "ip": self.ip, "ids_vulnerabilidades": self.ids_vulnerabilidades, "tipo": self.tipo, "dependencia": self.dependencia}
 
 
-#Nessas classes depois colocar o fator de exposição 
+#Fatores de exposicao baseado na exposicao a internet
 class Notebook (Equipamento):
-    pass
+    fator_exposicao = 1.0
 
 class Roteador(Equipamento):
-    pass
+    fator_exposicao = 1.2
 
 class Servidor_Web(Equipamento):
-    pass
+    fator_exposicao = 1.5
 
 class Impressora(Equipamento):
-    pass
+    fator_exposicao = 0.8
 
 class Inventario:
     def __init__ (self): 
