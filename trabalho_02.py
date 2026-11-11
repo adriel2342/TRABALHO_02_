@@ -375,11 +375,14 @@ class Menu:
             elif opcao == "8":
                 self.tela_vincular_dependencia()
 
+            elif opcao == "9":
+                self.tela_calcular_exibir_risco()
+
             elif opcao == "0":
                 print("=== OBRIGADO PELO USO ===")
                 break
             else:
-                print("=== ESCOLHA UMA OPCAO DE 0 A 7 ===")
+                print("=== ESCOLHA UMA OPCAO DE 0 A 9 ===")
 
     def tela_cadastrar_equipamento(self):
         equipamentos = self.inventario.listar_equipamento()
@@ -723,6 +726,24 @@ class Menu:
             
         self.inventario.vincular_dependencia(id_alvo, id_origem, peso)
         print("== Dependencia cadastrada com sucesso ==")
+
+    def tela_calcular_exibir_risco(self):
+        print("=== Relatorio de risco de rede efetiva ===")
+
+        riscos_efetivos = self.invetario.calcular_risco_efetivo()
+
+        if riscos_efetivos is None:
+            print("== Erro nao foi possivel calcular o risco ==")
+            return
+
+        riscos_proprios = self.inventario.vetor_risco_proprio()
+
+        print("=== Risco de equipamentos ===")
+        for i, eq in enumerate(self.inventario.equipamentos):
+            print(f"Ativo:{eq.nome}(ID: {eq.id_ativo})")
+            print(f"Risco proprio: {riscos_proprios[i]}")
+            print(f"Risco efetivo: {riscos_efetivos[i]}")
+            print()
  
 inventario = Inventario()
 menu = Menu(inventario)
