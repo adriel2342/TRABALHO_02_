@@ -201,7 +201,59 @@ class Inventario:
         self.salvar()
         return True 
 
+    def vetor_risco_propio (self):
+        riscos = []
 
+        for eq in self.equipamentos:
+            risco_acumulado = 0.0
+            for id_vuln in eq.ids_vulnerabilidades:
+                vuln = self.buscar_vulnerabilidade(id_vuln)
+                if vuln:
+                    risco_acumulado += float(vuln.severidade.value)
+
+
+            fator = getattr (eq, "fator_exposicao", 1.0)
+            risco_acumulado *= fator
+
+            riscos.append(risco_acumulado)
+
+            return np.array(riscos, dtype=float)
+ 
+    def gerar_matriz_dependencia(self):
+        N = len(self.equipamentos)
+
+        matriz_A = np.zeros((N, N), dtype=float)
+
+        id_para_indice = {}
+        for i, equipamento in enumerate(self.equipamentos):
+            id_para_indice[equipamento.id_ativo] = i
+
+        for id_origem, peso in equipamento.dependencia.items():
+
+            j = id_para_indice[id_origem]
+
+            matriz_A[i, j ] = peso
+
+        return matriz_A
+
+    def   matriz_I_A(self):
+        N = len(self.equipamentos)
+
+        b= self.vetor_risco_proprio()
+        A = self.gerar_matriz_dependencia()
+
+        I = np.eye(N, dtype=float)
+
+        matriz_sistema = I - A
+
+        det = np.linalg.det(matriz_sistema)
+
+        if det == 0:
+            print("Aviso o sistema nao possui uma solucao unica")
+            return None 
+
+        x = np.linalg.solve(matriz_sistema, b)
+        return x
     
     def salvar (self):
         dados = {
@@ -645,9 +697,6 @@ class Menu:
 
 
     def tela_vincular_dependencia(self):
-
-        
-
         print("=== Vinculo de dependencias ===")
         print("=== ID`s disponiveis -->")
         self.id_ativo_mostrar_ativo()
@@ -674,14 +723,7 @@ class Menu:
             
         self.inventario.vincular_dependencia(id_alvo, id_origem, peso)
         print("== Dependencia cadastrada com sucesso ==")
-        
-        
-
-
-
-
-
-
+ 
 inventario = Inventario()
 menu = Menu(inventario)
 menu.opcao_selecionada()    
