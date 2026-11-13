@@ -51,6 +51,7 @@ class Menu:
         print("-- Remover/Editar vulnerabilidades -- (6)")
         print("-- Vincular vulnerabilidades -- (7)")
         print("-- Vincular dependencia de ativos -- (8)")
+        print("-- Calcular e exibir o risco de um ativo -- (9)")
         print("-- Sair -- (0) ")
 
     def opcao_selecionada(self):
@@ -291,7 +292,7 @@ class Menu:
         if not id_vuln:
             print("== Esse campo nao pode ficar em branco ==")
             return
-        vuln = self.inventario.vulnerabilidade(id_vuln)
+        vuln = self.inventario.buscar_vulnerabilidade(id_vuln)
 
         if not vuln:
             print("== ID de vulnerabilidade nao encontrado ==")

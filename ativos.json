@@ -1,0 +1,33 @@
+{
+    "equipamentos": [
+        {
+            "id_ativo": "1",
+            "nome": "PC-FINANCEIRO-04",
+            "responsavel": "adriel",
+            "ip": "192.168.100.15",
+            "ids_vulnerabilidades": [
+                "1"
+            ],
+            "tipo": "Notebook",
+            "dependencia": {},
+            "vulnerabilidades_detalhadas": [
+                {
+                    "id_vuln": "1",
+                    "descricao": "teclado com defeito em algumas teclas",
+                    "categoria": "hardware",
+                    "severidade": "BAIXA",
+                    "status": "em aberto"
+                }
+            ]
+        }
+    ],
+    "vulnerabilidades": [
+        {
+            "id_vuln": "1",
+            "descricao": "teclado com defeito em algumas teclas",
+            "categoria": "hardware",
+            "severidade": "BAIXA",
+            "status": "em aberto"
+        }
+    ]
+}
