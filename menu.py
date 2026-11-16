@@ -421,13 +421,13 @@ class Menu:
             print("== O valor tem que estar em decimal ex: 0.3 == ")
             return
             
-        self.inventario.vincular_dependencia(id_alvo, id_origem, peso)
-        print("== Dependencia cadastrada com sucesso ==")
+        if self.inventario.vincular_dependencia(id_alvo, id_origem, peso):
+            print("== Dependencia cadastrada com sucesso ==")
 
     def tela_calcular_exibir_risco(self):
         print("=== Relatorio de risco de rede efetiva ===")
 
-        riscos_efetivos = self.invetario.calcular_risco_efetivo()
+        riscos_efetivos = self.invetario.matriz_I_A()
 
         if riscos_efetivos is None:
             print("== Erro nao foi possivel calcular o risco ==")
@@ -441,7 +441,7 @@ class Menu:
             print(f"Risco proprio: {riscos_proprios[i]}")
             print(f"Risco efetivo: {riscos_efetivos[i]}")
             print()
- 
-inventario = Inventario()
-menu = Menu(inventario)
-menu.opcao_selecionada()    
+if __name__ == '__main__':
+    inventario = Inventario()
+    menu = Menu(inventario)
+    menu.opcao_selecionada()    

@@ -132,7 +132,7 @@ class Inventario:
         self.salvar()
         return True 
 
-    def vetor_risco_propio (self):
+    def vetor_risco_proprio (self):
         riscos = []
 
         for eq in self.equipamentos:
@@ -148,7 +148,7 @@ class Inventario:
 
             riscos.append(risco_acumulado)
 
-            return np.array(riscos, dtype=float)
+        return np.array(riscos, dtype=float)
  
     def gerar_matriz_dependencia(self):
         n = len(self.equipamentos)
@@ -159,8 +159,8 @@ class Inventario:
         for i, equipamento in enumerate(self.equipamentos):
             id_para_indice[equipamento.id_ativo] = i
 
-        for id_origem, peso in equipamento.dependencia.items():
-            j = id_para_indice[id_origem]
+            for id_origem, peso in equipamento.dependencia.items():
+                j = id_para_indice[id_origem]
 
             matriz_A[i, j ] = peso
 
