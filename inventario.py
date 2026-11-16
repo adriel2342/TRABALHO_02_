@@ -152,17 +152,20 @@ class Inventario:
  
     def gerar_matriz_dependencia(self):
         n = len(self.equipamentos)
-
         matriz_A = np.zeros((n, n), dtype=float)
 
         id_para_indice = {}
         for i, equipamento in enumerate(self.equipamentos):
             id_para_indice[equipamento.id_ativo] = i
 
+        for i, equipamento in enumerate(self,equipamento):
             for id_origem, peso in equipamento.dependencia.items():
-                j = id_para_indice[id_origem]
+                if id_origem in id_para_indice:
+                    j = id_para_indice[id_origem]
+                    matriz_A [i,j] = peso
 
-            matriz_A[i, j ] = peso
+
+            
 
         return matriz_A
 

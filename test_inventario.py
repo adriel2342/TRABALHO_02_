@@ -1,7 +1,7 @@
 import unittest
 from menu import Menu
 from inventario import Inventario
-from equipamentos import Servidor_Web, Notebook
+from equipamentos import Servidor_Web, Notebook, Roteador
 from unittest.mock import patch
 from pathlib import Path
 from vulnerabilidades import Vulnerabilidade
@@ -157,12 +157,15 @@ class TesteInventario(unittest.TestCase):
         ativo2 = Servidor_Web("2", "MAIN_WEB", "alexandre", "192.168.100.4" )
         vulnerabillidade2 = Vulnerabilidade("2", "servidor fora do ar", CategoriasVuln.Software, Severidades.CRITICA, Status.em_tratamento)
 
+        notebook_limpo = Notebook("3", "NB_LIMPO", "adriel", "192.168.100.45")
+
         self.inv.adicionar_equipamento(ativo)
         self.inv.adicionar_vulnerabilidade(vulnerabilidade)
 
         self.inv.adicionar_equipamento(ativo2)
         self.inv.adicionar_vulnerabilidade(vulnerabillidade2)
 
+        self.inv.adicionar_equipamento(notebook_limpo)
 
         vinculado = self.inv.vincular_vulnerabilidade("1","1")
         vinculado2 = self.inv.vincular_vulnerabilidade("2","2")
@@ -179,6 +182,66 @@ class TesteInventario(unittest.TestCase):
         self.assertAlmostEqual(risco[1], 14.25)
 
         self.assertNotAlmostEqual(risco[1], 15.25)
+
+        self.assertAlmostEqual(risco[2], 0.0)
+
+
+    def teste_vincular_dependencia(self):
+
+        note = Notebook("1", "PC-FINANCEIRO-02", "adriel", "192.168.100.10")
+
+        rote= Roteador("2", "ROTEADOR-SECRETARIA", "katiane", "192.168.100.1")
+
+        sw = Servidor_Web("3", "MAIN-SERVER", "alexandre", "192.168.100.65")
+
+
+        self.inv.adicionar_equipamento(note)
+
+        self.inv.adicionar_equipamento(rote)
+
+        self.inv.adicionar_equipamento(sw)
+
+
+        self.assertTrue(self.inv.vincular_dependencia("2","1",0.4))
+
+        self.assertFalse(self.inv.vincular_dependencia("1","1",0.2))
+
+        self.assertFalse(self.inv.vincular_dependencia("2","3",0.6))
+
+        self.assertTrue(self.inv.vincular_dependencia("2","3", 0.5  ))
+
+
+
+
+    def propagacao_de_risco_numpy(self):
+
+        web = Servidor_Web("1","MAIN-SERVER","adriel","192.168.100.10")
+        nt = Notebook("2", "NB-O1", "adriel", "192.168.100.5")
+
+        vuln = Vulnerabilidade("1","falha ssl", CategoriasVuln.Software, Severidades.MEDIA, Status.em_tratamento)
+
+
+        self.inv.adicionar_equipamento(web)
+
+        self.inv.adicionar_equipamento(nt)
+
+        self.inv.adicionar_vulnerabilidade(vuln)
+
+        self.inv.vincular_vulnerabilidade("1","2")
+
+        self.inv.c=self.teste_vincular_dependencia*("2","1",0.5)
+
+        risco_total = (self.inv.matriz_I_A())
+
+        self.assertAlmostEqual(risco_total[0], 7.5)  # ---> mantem 7.5 pois nao tem uma deoendencia em si para ser multiplicada
+        self.assertAlmostEqual(risco_total[1], 3.75) #--> tem uma dependencia 0.5 * 7.5 (3.75)
+
+        
+
+
+        self.inv.vincular_dependencia()
+        
+        
 
 
 
