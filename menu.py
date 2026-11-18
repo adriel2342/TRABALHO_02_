@@ -27,7 +27,7 @@ class Menu:
             return
         print("=== ID's cadastrados para vulnerabilidades ===")
         for vuln in vulnerabilidades:
-            print(f"ID: {vuln.id_vuln}")
+            print(f"ID: {vuln.id_vuln}, Descricao: {vuln.descricao}")
 
 
     def confirmar(self, pergunta):
@@ -377,9 +377,10 @@ class Menu:
             print("=== Opcao invalida ===")
   
     def tela_vincular_vulnerabilidades(self):
-        self.id_vuln_mostrar_vuln()
+        
         self.id_ativo_mostrar_ativo()
         id_ativo = input("Digite o ID do ativo: ").strip()
+        self.id_vuln_mostrar_vuln()
         id_vuln = input("Digite o ID da vulnerabilidade: ").strip()
 
         if not id_vuln or not id_ativo:
