@@ -239,18 +239,9 @@ class TesteInventario(unittest.TestCase):
         
 
 
-        self.inv.vincular_dependencia()
         
         
-
-
-
-            
-
-    
-
-
-
+ 
 if __name__ == "__main__":
     unittest.main()
 

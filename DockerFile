@@ -2,7 +2,7 @@ FROM python:3.10-slim
 
 WORKDIR /Trabalho_02_final
 
-COPY vulnerabilidades.py menu.py inventario.py equipamentos.py enums.py .
+COPY . ./
 
 COPY requirements.txt . 
 
@@ -10,4 +10,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 5000
 
-CMD ["python", "vulnerabilidades.py", "menu.py", "inventario.py","equipamentos.py","enums.py"]
+CMD ["python","menu.py"]
