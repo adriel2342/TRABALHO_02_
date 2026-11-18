@@ -19,6 +19,36 @@
                     "status": "em aberto"
                 }
             ]
+        },
+        {
+            "id_ativo": "2",
+            "nome": "ROTEADOR-LABORATORIO-02",
+            "responsavel": "adriel",
+            "ip": "192.168.100.1",
+            "ids_vulnerabilidades": [],
+            "tipo": "Roteador",
+            "dependencia": {},
+            "vulnerabilidades_detalhadas": []
+        },
+        {
+            "id_ativo": "3",
+            "nome": "MAIN-SERVER",
+            "responsavel": "luna",
+            "ip": "192.168.100.45",
+            "ids_vulnerabilidades": [
+                "2"
+            ],
+            "tipo": "Servidor_Web",
+            "dependencia": {},
+            "vulnerabilidades_detalhadas": [
+                {
+                    "id_vuln": "2",
+                    "descricao": "servidor fora do ar",
+                    "categoria": "configuracao",
+                    "severidade": "CRITICA",
+                    "status": "em tratamento"
+                }
+            ]
         }
     ],
     "vulnerabilidades": [
@@ -28,6 +58,13 @@
             "categoria": "hardware",
             "severidade": "BAIXA",
             "status": "em aberto"
+        },
+        {
+            "id_vuln": "2",
+            "descricao": "servidor fora do ar",
+            "categoria": "configuracao",
+            "severidade": "CRITICA",
+            "status": "em tratamento"
         }
     ]
 }
