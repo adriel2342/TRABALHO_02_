@@ -402,8 +402,8 @@ class Menu:
         print("=== ID`s disponiveis -->")
         self.id_ativo_mostrar_ativo()
 
-        id_alvo = input("escolha o ID da vulnerabilidade para ser cadastrado alguma dependencia: ").strip().lower()
-        id_origem = input("escolha o ID da vulnerabilidade para dependencia do ativo acima: ").strip().lower()
+        id_alvo = input("escolha o ID ativo para ser cadastrado alguma dependencia: ").strip().lower()
+        id_origem = input("escolha o ID do ativo para depender do ativo acima: ").strip().lower()
 
         if not id_alvo or not id_origem:
             print("=== esses campos nao podem ficar em branco ===")
@@ -416,7 +416,7 @@ class Menu:
             print("=== Um ativo ou ambos nao identificados ===")
             return 
         try:
-            peso = float(input("Adicione um peso para vulnerabilidade EX: 0.3, (O valor nao pode ser igual ou maior que 1): ") ).strip()
+            peso = float(input("Adicione um peso para vulnerabilidade EX: 0.3, (O valor nao pode ser igual ou maior que 1): ").strip() )
 
         except ValueError:
             print("== O valor tem que estar em decimal ex: 0.3 == ")
@@ -428,7 +428,7 @@ class Menu:
     def tela_calcular_exibir_risco(self):
         print("=== Relatorio de risco de rede efetiva ===")
 
-        riscos_efetivos = self.invetario.matriz_I_A()
+        riscos_efetivos = self.inventario.matriz_I_A()
 
         if riscos_efetivos is None:
             print("== Erro nao foi possivel calcular o risco ==")

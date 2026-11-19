@@ -158,7 +158,7 @@ class Inventario:
         for i, equipamento in enumerate(self.equipamentos):
             id_para_indice[equipamento.id_ativo] = i
 
-        for i, equipamento in enumerate(self,equipamento):
+        for i, equipamento in enumerate (self.equipamentos):
             for id_origem, peso in equipamento.dependencia.items():
                 if id_origem in id_para_indice:
                     j = id_para_indice[id_origem]

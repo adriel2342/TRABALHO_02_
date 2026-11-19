@@ -27,7 +27,9 @@
             "ip": "192.168.100.1",
             "ids_vulnerabilidades": [],
             "tipo": "Roteador",
-            "dependencia": {},
+            "dependencia": {
+                "3": 0.6
+            },
             "vulnerabilidades_detalhadas": []
         },
         {
