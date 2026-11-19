@@ -1,8 +1,10 @@
+
+#dockerfile
 FROM python:3.10-slim 
 
 WORKDIR /Trabalho_02_final
 
-COPY . ./Trabalho_02_final
+COPY . ./
 
 COPY requirements.txt . 
 
