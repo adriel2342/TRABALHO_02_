@@ -1,11 +1,27 @@
+import os
 from enums import Severidades, TipoAtivo, Status, CategoriasVuln
 from equipamentos import Equipamento, Notebook, Impressora, Servidor_Web, Roteador
 from vulnerabilidades import Vulnerabilidade
 from inventario import Inventario
 
+
 class Menu:
     def __init__(self, inventario):
         self.inventario = inventario 
+
+
+    def pausar_tela(self):
+        try: 
+            input("aperte enter para continuar: ")
+
+        except(KeyboardInterrupt, EOFError):
+            pass
+
+
+
+
+    def limpar_tela(self):
+        os.system("cls" if os.name == "nt" else "clear")
 
     def id_ativo_mostrar_ativo(self):
        equipamentos = self.inventario.listar_equipamento()
@@ -56,32 +72,67 @@ class Menu:
 
     def opcao_selecionada(self):
         while True: 
+            
+            self.limpar_tela()
             self.exibir_menu()
             opcao = input("=== Selecione uma das opcoes acima: ").strip()
-            if opcao == "1":
-                self.tela_cadastrar_equipamento()
-            elif opcao == "2":
-                self.tela_busca_de_ativos()
-            elif opcao == "3":
-                self.tela_editar_remover_ativo()
-            elif opcao == "4":
-                self.tela_cadastrar_vulnerabilidade()
-            elif opcao == "5":
-                self.tela_busca_vulnerabilidade()
-            elif opcao == "6":
-                self.tela_editar_remover_vulnerabilidade()
-            elif opcao == "7":
-                self.tela_vincular_vulnerabilidades()
-            elif opcao == "8":
-                self.tela_vincular_dependencia()
+            self.limpar_tela()
 
+            if opcao == "1":
+                self.limpar_tela()
+                self.tela_cadastrar_equipamento()
+                self.pausar_tela()
+
+            elif opcao == "2":
+                self.limpar_tela()
+                self.tela_busca_de_ativos()
+                self.pausar_tela()
+                
+            elif opcao == "3":
+                
+                self.limpar_tela()
+                self.tela_editar_remover_ativo()
+                self.pausar_tela()
+                
+            elif opcao == "4":
+                self.limpar_tela()
+                self.tela_cadastrar_vulnerabilidade()
+                self.pausar_tela()
+                
+            elif opcao == "5":
+                self.limpar_tela()
+                self.tela_busca_vulnerabilidade()
+                self.pausar_tela()
+                
+            elif opcao == "6":
+                self.limpar_tela()
+                self.tela_editar_remover_vulnerabilidade()
+                self.pausar_tela()
+                
+            elif opcao == "7":
+                self.limpar_tela()
+                self.tela_vincular_vulnerabilidades()
+                self.pausar_tela()
+                
+            elif opcao == "8":
+                self.limpar_tela()
+                self.tela_vincular_dependencia()
+                self.pausar_tela()
+                
+                
             elif opcao == "9":
+                self.limpar_tela()
                 self.tela_calcular_exibir_risco()
+                self.pausar_tela()
+                
+                
 
             elif opcao == "0":
+                self.limpar_tela()
                 print("=== OBRIGADO PELO USO ===")
                 break
             else:
+                self.limpar_tela()
                 print("=== ESCOLHA UMA OPCAO DE 0 A 9 ===")
 
     def tela_cadastrar_equipamento(self):
@@ -100,6 +151,10 @@ class Menu:
         responsavel  = input("Adicione um RESPONSAVEL relacionado ao seu ativo: ").strip().lower()
         ip = input("Adicione um IP relacionado ao seu ativo: ").strip().lower()
 
+        if not id_ativo or not nome or not responsavel or not ip:
+                    print("=== Os campos acima não devem ficar em branco ===")
+                    return
+
         print("=== TIPOS DISPONÍVEIS ===")
         for ativo in TipoAtivo:
             print(ativo.value, "-", ativo.name)
@@ -111,9 +166,7 @@ class Menu:
         except ValueError:
             print("=== Tipo não identificado tente novamente ===")
             return
-        if not id_ativo or not nome or not responsavel or not ip:
-            print("=== Os campos acima não devem ficar em branco ===")
-            return
+       
         print("=== Confirmacao dos dados ===")
         print(f"O ID do ativo está correto? -> {id_ativo}?\n O NOME do ativo está correto? -> {nome}?\n O RESPONSAVEL pelo ativo está correto? -> {responsavel}?\n O IP do ativo está correto? -> {ip}?\n O TIPO do ativo está correto? -> {codigo_tipo}?")
 
@@ -213,6 +266,10 @@ class Menu:
             
         descricao = input("== Digite a descricao para a vulnerabilidade: ").strip().lower()
 
+        if not id_vuln or not descricao:
+                    print("== Esse campo nao deve ficar em branco ==")
+                    return
+
         for c in CategoriasVuln:
              print(c.name)
 
@@ -245,9 +302,6 @@ class Menu:
             print("== Tipo nao identificado ==")
             return
 
-        if not id_vuln or not descricao:
-            print("== Esse campo nao deve ficar em branco ==")
-            return
 
         print("== Confirmacao de dados ==")
         print(
@@ -323,12 +377,12 @@ class Menu:
             for sev in Severidades:
                 print(sev.name )
 
-            severidade_nova = input("Coloque uma nova severidade para a vulnerabilidade(Caso queira manter pressione enter): ").strip().upper()
+            severidade_nova = input("Coloque uma nova severidade para a vulnerabilidade(Caso queira manter pressione enter): ").strip().upper() or None
             tipo_severidade = None
             if severidade_nova:
                 try: 
-                    tipo_severidade = Severidades(severidade_nova)
-                except ValueError:
+                    tipo_severidade = Severidades[severidade_nova]
+                except (ValueError, KeyError):
                     print("=== Categoria nao identificada ===")
                     return
 
@@ -337,7 +391,7 @@ class Menu:
             for st in Status:
                 print(st.value)
 
-            status_novo = input("== Coloque um novo status para a vulnerabilidade(Caso queira manter pressione enter): ").strip().lower()
+            status_novo = input("== Coloque um novo status para a vulnerabilidade(Caso queira manter pressione enter): ").strip().lower() or None
             tipo_status = None
 
             if status_novo:
@@ -349,16 +403,16 @@ class Menu:
 
             id_exibir_vuln = id_vuln_novo or vuln.id_vuln
             descricao_exibir = descricao_novo or vuln.descricao
-            categoria_exibir = categoria_nova or vuln.categoria
-            severidade_exibir = severidade_nova or vuln.severidade
-            status_exibir = status_novo or vuln.status
+            categoria_exibir = tipo_categoria or vuln.categoria
+            severidade_exibir = tipo_severidade or vuln.severidade
+            status_exibir = tipo_status or vuln.status
 
             print("== Confirmacao de dados ==")
             print(f"O id da vulnerabilidade está correto -> {id_exibir_vuln}?\n A descricao esta correta -> {descricao_exibir}?\n A categoria esta correta -> {categoria_exibir}?\n A severidade esta correta {severidade_exibir}?\n O status esta correto?{status_exibir}")
             if not self.confirmar("== Os dados estao corretos? =="):
                 print("=== Edicao cancelada ===")
                 return
-            if self.inventario.editar_vulnerabilidade(id_vuln,id_vuln_novo,descricao_novo,categoria_nova, severidade_nova, status_novo):
+            if self.inventario.editar_vulnerabilidade(id_vuln,id_vuln_novo,descricao_novo,tipo_categoria, tipo_severidade, tipo_status):
                 print("== Vulnerabilidade editada ==")
             else:
                 print("=== Nao foi possivel editar a vulnerabilidade ===")
