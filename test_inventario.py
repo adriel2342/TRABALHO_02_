@@ -17,6 +17,7 @@ class TesteInventario(unittest.TestCase):
         self.arquivo_temp = Path(self.temp_dir.name) / "teste_ativos.json"
         
         self.inv = Inventario()
+        self.menu = Menu(self.inv)
         self.inv.ARQUIVOS_DADOS = self.arquivo_temp
         self.inv.equipamentos.clear()
         self.inv.vulnerabilidades.clear()
@@ -235,6 +236,16 @@ class TesteInventario(unittest.TestCase):
 
         self.assertAlmostEqual(risco_total[0], 7.5)  # ---> mantem 7.5 pois nao tem uma deoendencia em si para ser multiplicada
         self.assertAlmostEqual(risco_total[1], 3.75) #--> tem uma dependencia 0.5 * 7.5 (3.75)
+
+
+
+    def test_mostrar_ativo_id(self):
+
+        web = Servidor_Web("1","MAIN-SERVER","adriel","192.168.100.10")
+
+        self.inv.adicionar_equipamento(web)
+
+        self.assertTrue (self.menu.id_ativo_mostrar_ativo())
 
         
 

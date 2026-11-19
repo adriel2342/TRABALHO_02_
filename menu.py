@@ -26,6 +26,7 @@ class Menu:
     def id_ativo_mostrar_ativo(self):
        equipamentos = self.inventario.listar_equipamento()
 
+       
        if not equipamentos:
            print("=== Nenhum id cadastrado ===")
            return

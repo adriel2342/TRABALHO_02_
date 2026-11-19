@@ -2,7 +2,7 @@ FROM python:3.10-slim
 
 WORKDIR /Trabalho_02_final
 
-COPY . ./
+COPY . ./Trabalho_02_final
 
 COPY requirements.txt . 
 
