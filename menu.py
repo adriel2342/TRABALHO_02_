@@ -214,9 +214,11 @@ class Menu:
         if not ativo: 
             print("=== ID não identificado ===")
             return
+        self.limpar_tela()
         print(ativo.descrever_equipamento())
 
         opcao = input("Oque você deseja fazer?\n EDITAR(1) | REMOVER(2) -> ").strip()
+        self.limpar_tela()
         if opcao == "1":
             id_ativo_novo = input("Deseja editar o id? (caso não queira pressione enter): ").strip() or None
             if id_ativo_novo and id_ativo_novo != id_ativo:
@@ -240,7 +242,8 @@ class Menu:
                 print("== Ativo editado ==")
             else:
                 print("== Nao foi possivel editar o ativo ==")
-            
+
+        
         elif opcao == "2":
             if not self.confirmar("Deseja realmente apagar o ativo?"):
                 print("=== Remoção cancelada ===")
@@ -303,7 +306,7 @@ class Menu:
             print("== Tipo nao identificado ==")
             return
 
-
+        self.limpar_tela()
         print("== Confirmacao de dados ==")
         print(
         f"ID: {id_vuln}\n"
@@ -344,6 +347,7 @@ class Menu:
         print("Esses sao os IDs disponiveis para serem editados ou removidos:")
         self.id_vuln_mostrar_vuln()
         id_vuln = input("Escolha alguma das opcoes acima: ").strip()
+        self.limpar_tela()
         if not id_vuln:
             print("== Esse campo nao pode ficar em branco ==")
             return
@@ -355,7 +359,7 @@ class Menu:
         print(vuln.descrever_vuln())
 
         opcao = input("Oque voce deseja fazer?\n EDITAR(1) | REMOVER (2) ").strip()
-
+        self.limpar_tela()
         if opcao == "1":
             id_vuln_novo = input("Escolha um novo iD para a vulnerabilidade(Caso queira manter pressione enter): ").strip() or None
             if id_vuln_novo and id_vuln_novo != id_vuln:
@@ -408,6 +412,7 @@ class Menu:
             severidade_exibir = tipo_severidade or vuln.severidade
             status_exibir = tipo_status or vuln.status
 
+            self.limpar_tela()
             print("== Confirmacao de dados ==")
             print(f"O id da vulnerabilidade está correto -> {id_exibir_vuln}?\n A descricao esta correta -> {descricao_exibir}?\n A categoria esta correta -> {categoria_exibir}?\n A severidade esta correta {severidade_exibir}?\n O status esta correto?{status_exibir}")
             if not self.confirmar("== Os dados estao corretos? =="):
